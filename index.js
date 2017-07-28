@@ -1,6 +1,5 @@
 'use strict';
 
-var escapeStringRegexp = require('./lib/escape-string-regexp');
 var LRU = require("lru-cache");
 
 if (!global.Map) global.Map = require('es6-map');
@@ -19,11 +18,22 @@ function Fool(opts){
   }
 }
 
+var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+
+Fool.prototype.escapeRegex = function(str){
+
+  if (typeof str !== 'string') {
+    throw new TypeError('Expected a string');
+  }
+
+  return str.replace(matchOperatorsRe, '\\$&');
+};
+
 Fool.prototype.makeRe = function(pattern){
 
   if (this.__reCache.has(pattern)) return this.__reCache.get(pattern);
 
-  pattern = escapeStringRegexp(pattern).replace(/\\\*/g, '.*');
+  pattern = this.escapeRegex(pattern).replace(/\\\*/g, '.*');
 
   var re = new RegExp('^' + pattern + '$', 'i');
 

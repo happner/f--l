@@ -1,5 +1,5 @@
 # F--L
-*foolishly simple bi-directional wildcards*
+*foolishly simple bi-directional wildcards!*
 
 For the single directional wildcard, ie: test t*st, we adapted [matcher](https://github.com/sindresorhus/matcher/blob/master/index.js) to work for node 0.10 up to 8+
 
@@ -37,7 +37,7 @@ expect(noFoolLikeA.matches('/test*/short','/test/complex/and/short')).to.be(true
 expect(noFoolLikeA.matches('*/short','/test/complex/and/long')).to.be(false);
 expect(noFoolLikeA.matches('/test*/short','/test/complex/and/short/')).to.be(false);
 
-//for more folling around, have a look at the tests
+//for more f***ing around, have a look at the tests
 
 ```
 
