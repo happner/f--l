@@ -20,6 +20,7 @@ var Fool = require('f--l');
 
 var noFoolLikeA = new Fool({cache:1000});//caches replies, default is false
 
+expect(noFoolLikeA.matches('*te*st/mat', '*t*e*s*t*')).to.be(true);
 expect(noFoolLikeA.matches('*te*st/mat', '*te*st*')).to.be(true);
 expect(noFoolLikeA.matches('*e*ma*', '*test/mat')).to.be(true);
 expect(noFoolLikeA.matches('*i*g1', '*str*ing*')).to.be(true);

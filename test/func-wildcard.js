@@ -64,7 +64,10 @@ describe('functional tests', function () {
     var fool = new Fool();
 
     //* is ""
+    expect(fool.matches('*te*s*t/mat', '*t*e*s*t*')).to.be(true);
+
     expect(fool.matches('*te*st/mat', '*te*st*')).to.be(true);
+
 
     expect(fool.matches('*e*ma*', '*test/mat')).to.be(true);
     expect(fool.matches('*i*g1', '*str*ing*')).to.be(true);
@@ -77,16 +80,17 @@ describe('functional tests', function () {
     expect(fool.matches('/test/match*', '/test/match/*')).to.be(true);
     expect(fool.matches('/test/ma*', '*tes*/ma*')).to.be(true);
     expect(fool.matches('*test/match', '/test/mat*')).to.be(true);
-    expect(fool.matches('/test/match*', '/blah/match/*')).to.be(false);
     expect(fool.matches('/test/mat*', '*test/match')).to.be(true);
     expect(fool.matches('*test/match', '/test/match')).to.be(true);
     expect(fool.matches('/test/mat*', '/test/match')).to.be(true);
+
     expect(fool.matches('*/test/match', '*st/blah')).to.be(false);
     expect(fool.matches('*test/match', '/test/mar*')).to.be(false);
     expect(fool.matches('/test/mat*', '*test/march')).to.be(false);
     expect(fool.matches('*test/match', '/test/ma*rch')).to.be(false);
     expect(fool.matches('/test/mat*', '*test/march')).to.be(false);
     expect(fool.matches('*test/mat', '*pe*st*')).to.be(false);
+    expect(fool.matches('/test/match*', '/blah/match/*')).to.be(false);
 
     return done();
   });

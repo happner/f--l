@@ -59,6 +59,63 @@ Fool.prototype.__conventionalMatch = function(pattern, path) {
   return this.makeRe(pattern).test(path);
 };
 
+Fool.prototype.__checkDiagonals = function(matrix, startY, startX){
+
+  var intersection;
+  var previousIntersection = null;
+  var matched = false;
+  var columns = matrix[startY].length - startX;
+  var rows = matrix.length - startY;
+  var x = 0;
+  var hits = 0;
+
+  //walk through the matrix looking for diagonals
+  for (var currentColumn = startX; currentColumn < matrix[0].length; currentColumn++) {
+
+    if (matrix[startY][currentColumn] != 0) {//if we have a * or character at the top, we start looping through the diagonal
+
+      x = currentColumn;
+      hits = 1;
+
+      for (var y = startY; y < matrix.length; y++) {
+
+        intersection = matrix[y][x];
+
+        if (!intersection) {
+
+            //this happens when one of the words has * in between letters that take up no space, ie test vs. t*e*s*t
+            //causes striping (parallel diagonals starting at x + 1, y + 1 or x - 1, y - 1)
+
+            if (previousIntersection != '*' || y - 1 == startY) break;
+
+            for (var xShiftForward = x + 1; xShiftForward < columns; xShiftForward++) {
+              if (matrix[y][xShiftForward] && this.__checkDiagonals(matrix, y, xShiftForward)){
+                  return true;
+              }
+            }
+
+            if (!matched){
+              for (var xShiftBackward = x - 1; xShiftBackward >= 0; xShiftBackward--) {
+                if (matrix[y][xShiftBackward] && this.__checkDiagonals(matrix, y, xShiftBackward)) {
+                  return true;
+                }
+              }
+            }
+        }
+
+        hits++;
+        x++;
+
+        if (hits == rows) return true;
+
+        previousIntersection = intersection;
+      }
+    }
+  }
+
+  return matched;
+};
+
 Fool.prototype.__internalMatch = function(path1, path2) {
 
   path1 = this.prepareWildPath(path1);
@@ -104,63 +161,11 @@ Fool.prototype.__internalMatch = function(path1, path2) {
     });
   });
 
-  var matched = false;
+  // matrix.forEach(function(row){
+  //   console.log(row.join(' '));
+  // });
 
-  //walk through the matrix looking for diagonals
-  for (var i = 0; i < matrix[0].length; i++) {
-
-    if (matrix[0][i] != 0) {
-
-      var x = i;
-
-      var total = 1;
-
-      for (var y = 1; y < horizontal.length; y++) {
-
-        x++;
-
-        var intersection = matrix[y][x];
-
-        if (!intersection) {
-          if (y - 1 != 0 && matrix[y - 1][x - 1] == '*') { //this happens when one of the words has * in between letters that take up no space, ie test vs. t*e*s*t
-                                                           // causes striping (parallel diagonals starting at x + 1, y + 1 or x - 1, y - 1)
-
-            var foundShift = -1;
-
-            for (var xShiftForward = x + 1; xShiftForward < matrix[0].length; xShiftForward++) {
-              if (matrix[y][xShiftForward]) {
-                foundShift = xShiftForward;
-                break;
-              }
-            }
-
-            if (foundShift == -1)
-              for (var xShiftBackward = x - 1; xShiftBackward >= 0; xShiftBackward--) {
-                if (matrix[y][xShiftBackward]) {
-                  foundShift = xShiftBackward;
-                  break;
-                }
-              }
-
-            if (foundShift > -1) {
-              x = foundShift;
-            } else break;
-
-          } else break;
-        }
-
-        total++;
-
-        if (total == horizontal.length) {
-          matched = true;
-          break;
-        }
-      }
-      if (matched) break;
-    }
-  }
-
-  return matched;
+  return this.__checkDiagonals(matrix, 0, 0);
 };
 
 Fool.prototype.__cachedMatches = function (input, pattern) {
