@@ -1,5 +1,6 @@
 # F--L
 *foolishly simple bi-directional wildcards!*
+# NB - THIS PROJECT HAS BEEN DISCONTINUED, IF YOU WANT BI-DIRECTIONAL GOODNESS, PLEASE CHECK OUT [CO-MEDIAN](https://github.com/happner/co-median)
 
 For the single directional wildcard, ie: test t*st, we adapted [matcher](https://github.com/sindresorhus/matcher/blob/master/index.js) to work for node 0.10 up to 8+
 
